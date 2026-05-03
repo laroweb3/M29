@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user statistics and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "handle": { "type": "string" },
+        "language": { "type": "string" },
+        "friends": { "type": "array", "items": { "type": "string" } },
+        "victories": { "type": "number" },
+        "defeats": { "type": "number" },
+        "totalGames": { "type": "number" }
+      },
+      "required": ["uid", "displayName"]
+    },
+    "Game": {
+      "title": "Active Game",
+      "description": "Stores state of a multiplayer game session.",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["waiting", "active", "finished"] },
+        "players": {
+          "type": "object",
+          "description": "Mapping of userId to Team"
+        },
+        "gameState": {
+          "type": "object",
+          "description": "Serialized game state (bases, troops, etc.)"
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastUpdatedAt": { "type": "string", "format": "date-time" },
+        "winner": { "type": "string" }
+      },
+      "required": ["status", "players", "createdAt"]
+    },
+    "GlobalStats": {
+      "title": "Global Statistics",
+      "description": "Counter for total victories per side.",
+      "type": "object",
+      "properties": {
+        "argVictories": { "type": "number" },
+        "ukVictories": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profile and stats."
+    },
+    "games/{gameId}": {
+      "schema": "Game",
+      "description": "Active for multiplayer sessions."
+    },
+    "stats/global": {
+      "schema": "GlobalStats",
+      "description": "Global leaderboard totals."
+    }
+  }
+}
